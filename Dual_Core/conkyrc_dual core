@@ -1,0 +1,168 @@
+# Conky configuration
+# by Wes Brewer [zer0]
+
+# set to yes if you want Conky to be forked in the background
+background yes
+
+# Use Xft?
+use_xft yes
+
+# Xft font when Xft is enabled
+xftfont Bitstream Vera Sans Mono:size=8
+
+# Text alpha when using Xft
+xftalpha 0.8
+
+# Update interval in seconds
+update_interval 5.0
+
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+total_run_times 0
+
+# Create own window instead of using desktop (required in nautilus)
+own_window no
+
+# If own_window is yes, you may use type normal, desktop or override
+own_window_type normal
+
+# Use pseudo transparency with own_window?
+own_window_transparent yes
+
+# If own_window_transparent is set to no, you can set the background colour here
+own_window_colour black
+
+# If own_window is yes, these window manager hints may be used
+#own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+
+# Minimum size of text area
+minimum_size 280 5
+
+# Draw shades?
+draw_shades yes
+
+# Draw outlines?
+draw_outline no
+
+# Draw borders around graphs
+draw_graph_borders no
+
+# Draw borders around text
+draw_borders no
+
+# Stippled borders?
+stippled_borders 8
+
+# border margins
+border_margin 4
+
+# border width
+border_width 1
+
+# Default colors and also border colors
+default_color white
+default_shade_color black
+default_outline_color black
+
+# Text alignment, other possible values are commented
+alignment top_left
+#alignment top_right
+#alignment bottom_left
+#alignment bottom_right
+#alignment none
+
+# Gap between borders of screen and text
+# same thing as passing -x at command line
+gap_x 15
+gap_y 15
+
+# Subtract file system buffers from used memory?
+no_buffers yes
+
+# set to yes if you want all text to be in uppercase
+uppercase no
+
+# number of cpu samples to average
+# set to 1 to disable averaging
+cpu_avg_samples 2
+
+# number of net samples to average
+# set to 1 to disable averaging
+net_avg_samples 2
+
+# Force UTF8? note that UTF8 support required XFT
+# Fixes degree symbol ° display issues
+override_utf8_locale yes
+
+# Add spaces to keep things from moving about?  This only affects certain objects.
+use_spacer no
+
+###################### Configure Colours ##########################
+# Main headers
+color0 90ACDF
+# Standard text
+color1 white
+# Sub headers
+color2 90ACDF
+# 1st place TOP text
+color3 E1F0FF
+# Bars
+color4 lightgrey
+# Clock
+color5 lightgrey
+
+## Original Colour Key - http://www.visibone.com/colorlab/big.html ##
+# Main headers = FF9933 (light hard orange)
+# Standard text = white
+# TOP headers = orange
+# 1st place TOP text = FFFFCC (pale weak yellow)
+# Bars = lightgrey
+# Clock = lightgrey
+# CPU1 = 3399FF (light hard azure)
+# CPU2 = 9933FF (light hard violet)
+# Download = green
+# Upload = red
+# Graph gradient = 000000 (black)
+
+##################### TEXT - screen output ########################
+TEXT
+$color0[ SYSTEM ] $hr $color1 ${voffset 3}
+ ${execi 3600 whoami} @ $nodename
+ $sysname $kernel ($machine)
+ Up: $uptime
+ ${voffset -44}$color5${font :size=25} $alignr${time %l:%M} $font
+ ${font :size=9} $alignr${time %a, %b %d}   $font$color1
+
+$color0[ CPU ] $hr $color1 ${voffset 3}
+ CPU Usage: $cpu% ${offset 20} Processes: $processes $alignr $freq_g GHz
+ Core 0: ${color 90ACDF}${cpu cpu1}% ${cpubar cpu1 6,75} $color1 Core 1: ${color 90ACDF}${cpu cpu2}% ${cpubar cpu2}$color1
+${cpugraph cpu1 25,150 35486c 90ACDF} ${cpugraph cpu2 25,150 35486c 90ACDF}
+$color2$alignc NAME                PID    CPU%   MEM%
+$color3$alignc ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}$color1
+$alignc ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+$alignc ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+
+$color0[ RAM ] $hr $color1 ${voffset 3}
+ RAM:  $mem/$memmax $alignr$color4$memperc% ${membar 6,140}$color1
+ Swap: $swap/$swapmax $alignr$color4$swapperc% ${swapbar 6,140}$color1
+
+$color2$alignc NAME                PID    CPU%   MEM%
+$color3$alignc ${top_mem name 1} ${top_mem pid 1} ${top_mem cpu 1} ${top_mem mem 1}$color1
+$alignc ${top_mem name 2} ${top_mem pid 2} ${top_mem cpu 2} ${top_mem mem 2}
+$alignc ${top_mem name 3} ${top_mem pid 3} ${top_mem cpu 3} ${top_mem mem 3}
+
+$color0[ HDD ] $hr $color1 ${voffset 3}
+ Root: ${fs_used /}/${fs_size /} $alignr$color4${fs_free_perc /}% Free ${fs_bar 6,90 /}$color1
+ Home: ${fs_used /home}/${fs_size /home} $alignr$color4${fs_free_perc /home}% Free ${fs_bar 6,90 /home}$color1
+
+$color0[ TEMPS ] $hr $color1 ${voffset 3}
+ CPU:  ${hwmon temp 3}°C - ${hwmon fan 2} RPM       GPU: ${exec nvidia-settings -q gpucoretemp | grep Attribute | cut -c 42-43}°C
+ Case: ${hwmon temp 1}°C - ${hwmon fan 1} RPM       HDD: ${hddtemp /dev/sda}
+
+$color0[ NETWORK ] $hr $color1 ${voffset 3}
+ IP Address: ${addr eth0}
+ Down:${color green} ${downspeed eth0} KB/s (430) ${offset 40}$color1 Up:${color red} ${upspeed eth0} KB/s (85)
+$color1${downspeedgraph eth0 25,150 35486c 00CC00 430} ${upspeedgraph eth0 25,150 35486c CC0000 85}

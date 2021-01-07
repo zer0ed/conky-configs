@@ -1,0 +1,139 @@
+# Conky configuration
+# by Wes Brewer [zer0]
+
+# set to yes if you want Conky to be forked in the background
+background yes
+
+# Use Xft?
+use_xft yes
+
+# Xft font when Xft is enabled
+xftfont Bitstream Vera Sans Mono:size=8
+
+# Text alpha when using Xft
+xftalpha 0.9
+
+# Update interval in seconds
+update_interval 5.0
+
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+total_run_times 0
+
+# Create own window instead of using desktop (required in nautilus)
+own_window no
+
+# If own_window is yes, you may use type normal, desktop or override
+own_window_type normal
+
+# Use pseudo transparency with own_window?
+own_window_transparent yes
+
+# If own_window_transparent is set to no, you can set the background colour here
+own_window_colour black
+
+# If own_window is yes, these window manager hints may be used
+#own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+
+# Minimum size of text area
+minimum_size 1120 30
+
+# Draw shades?
+draw_shades yes
+
+# Draw outlines?
+draw_outline no
+
+# Draw borders around graphs
+draw_graph_borders yes
+
+# Draw borders around text
+draw_borders no
+
+# Stippled borders?
+stippled_borders 2
+
+# border margins
+border_margin 4
+
+# border width
+border_width 1
+
+# Default colors and also border colors
+default_color white
+default_shade_color black
+default_outline_color black
+
+# Text alignment, other possible values are commented
+alignment top_left
+#alignment top_right
+#alignment bottom_left
+#alignment bottom_right
+#alignment none
+
+# Gap between borders of screen and text
+# same thing as passing -x at command line
+gap_x 70
+gap_y 0
+
+# Subtract file system buffers from used memory?
+no_buffers yes
+
+# set to yes if you want all text to be in uppercase
+uppercase no
+
+# number of cpu samples to average
+# set to 1 to disable averaging
+cpu_avg_samples 2
+
+# number of net samples to average
+# set to 1 to disable averaging
+net_avg_samples 2
+
+# Force UTF8? note that UTF8 support required XFT
+# Fixes degree symbol ° display issues
+override_utf8_locale yes
+
+# Add spaces to keep things from moving about?  This only affects certain objects.
+use_spacer no
+
+###################### Configure Colours ##########################
+# Headers
+color0 lightgrey
+# Standard text
+color1 lightgrey
+# Arch Logo
+color2 lightgrey
+# Clock
+color3 lightgrey
+# Bar Graphs
+color4 lightgrey
+# Graphs
+color5 777777
+
+##################### TEXT - screen output ########################
+TEXT
+${voffset -20}$color2${font OpenLogos:size=65}B $font
+${voffset -67}${offset 120}$color3${font :size=15} ${time %l:%M} $font
+${voffset -2}${offset 124}${font :size=7} ${time %a, %b %d} $font
+${voffset -42}
+${offset 205}$color1 ${execi 3600 whoami}-$nodename($machine)
+${offset 225}Up: $uptime
+${voffset -39}
+${offset 340}$color0 CPU1: $color5${cpugraph cpu1 10,50 222222 EEEEEE} $color1${cpu cpu1}%
+${offset 340}$color0 CPU2: $color5${cpugraph cpu2 10,50 222222 EEEEEE} $color1${cpu cpu2}% 
+${voffset -39}
+${offset 475}$color0 Ram:  $color4${membar 6,50} $color1$memperc%
+${offset 475}$color0 Swap: $color4${swapbar 6,50} $color1$swapperc%
+${voffset -39}
+${offset 615}$color0 Root: $color4${fs_bar 6,50 /} $color1${fs_free_perc /}%
+${offset 615}$color0 Home: $color4${fs_bar 6,50 /home} $color1${fs_free_perc /home}%
+${voffset -39}
+${offset 755}$color0 In:  $color5${downspeedgraph eth0 10,50 222222 EEEEEE 430} $color1${downspeed eth0} KB/s
+${offset 755}$color0 Out: $color5${upspeedgraph eth0 10,50 222222 EEEEEE 85} $color1${upspeed eth0} KB/s
+${voffset -39}
+${offset 910}$color0 CPU:  $color1${hwmon temp 3}°C (${hwmon fan 2} RPM)  $color0 GPU: $color1${exec nvidia-settings -q gpucoretemp | grep Attribute | cut -c 42-43}°C
+${offset 910}$color0 Case: $color1${hwmon temp 1}°C (${hwmon fan 1} RPM)  $color0 HDD: $color1${hddtemp /dev/sda}

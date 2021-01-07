@@ -1,0 +1,124 @@
+## Conkyrc original from Pinguy OS
+## Heavly modified by [zer0ed] Wes Brewer
+
+## Instructions
+## To use this..
+## $sudo apt-get install python-statgrab ttf-droid ttf-liberation hddtemp curl lm-sensors conky-all
+## $sudo sensors-detect #answering Yes (default) to all questions, even that last one that defaults to No
+
+
+
+# Use Xft?
+use_xft yes
+xftfont Droid Sans:size=8
+xftalpha 0.9
+text_buffer_size 2048
+
+# Update interval in seconds
+update_interval 2
+
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+total_run_times 0
+
+# Create own window instead of using desktop (required in nautilus)
+own_window yes
+own_window_transparent yes
+own_window_type normal
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+
+# Minimum size of text area
+minimum_size 182 0
+maximum_width 182
+
+# Draw shades?
+draw_shades no
+default_color D6D6D6 #4D4D4D
+# Draw outlines?
+draw_outline no
+
+# Draw borders around text
+draw_borders no
+
+# Stippled borders?
+stippled_borders 0
+
+# border margins
+border_inner_margin 5
+
+# border width
+border_width 1
+
+# Text alignment, other possible values are commented
+#alignment top_left
+alignment top_right
+#alignment bottom_left
+#alignment bottom_right
+
+# Gap between borders of screen and text
+# same thing as passing -x at command line
+gap_x 10
+gap_y 10
+
+# -- Lua Load -- #
+# Draw a background for conky
+lua_load ~/.conky/.draw_bg.lua
+lua_draw_hook_pre draw_bg
+
+# for getting distro info instead of text used below (2nd line)
+#${pre_exec cat /etc/issue.net}
+
+TEXT
+${font Droid Sans:bold:size=9}SYSTEM ${hr 3}
+${goto 12}${voffset 8}${font OpenLogos:size=32}t${font}${goto 50}${voffset -30}${pre_exec cat /etc/issue.net} ($machine)
+${goto 50}Kernel: ${kernel}
+${goto 50}Uptime: ${uptime}
+
+${font Droid Sans:bold:size=9}CPU ${hr 3}
+${goto 15}${voffset 6}${font StyleBats:size=16}A${font}${voffset -4}${goto 40}CPU1: ${cpu cpu1}% ${alignr}${cpubar cpu1 8,60}
+${voffset 2}${goto 40}CPU2: ${cpu cpu2}% ${alignr}${cpubar cpu2 8,60}
+${voffset 2}${goto 40}CPU3: ${cpu cpu3}% ${alignr}${cpubar cpu3 8,60}
+${voffset 2}${goto 40}CPU4: ${cpu cpu4}% ${alignr}${cpubar cpu4 8,60}
+${goto 50}${voffset 6}Highest: ${alignr}CPU%
+${goto 50}${voffset -5.5}${hr 1}
+${voffset -1}${goto 50}${top name 1} ${alignr }${top cpu 1}
+${voffset -1}${goto 50}${top name 2} ${alignr }${top cpu 2}
+${voffset -1}${goto 50}${top name 3} ${alignr }${top cpu 3}
+
+${font Droid Sans:bold:size=9}RAM ${hr 3}
+${goto 15}${voffset 6}${font StyleBats:size=16}g${font}${voffset -4}${goto 40}RAM: ${mem} ${alignr}${membar 8,60}
+${goto 15}${voffset 6}${font StyleBats:size=16}j${font}${voffset -4}${goto 40}SWAP: ${swap} ${alignr}${swapbar 8,60}
+${goto 50}${voffset 6}Highest: ${alignr}RAM%
+${goto 50}${voffset -5.5}${hr 1}
+${voffset -1}${goto 50}${top_mem name 1} ${alignr }${top_mem mem 1}
+${voffset -1}${goto 50}${top_mem name 2} ${alignr }${top_mem mem 2}
+${voffset -1}${goto 50}${top_mem name 3} ${alignr }${top_mem mem 3}
+
+${font Droid Sans:bold:size=9}HDD ${hr 3}
+${goto 12}${voffset 6}${font Poky:size=16}H${font}${goto 37}${voffset -11} Root: ${fs_used_perc /}%${alignr}${fs_size /}
+${goto 37} Free: ${fs_free /}${alignr}${fs_bar 8,60 /}
+${goto 12}${voffset 6}${font Poky:size=16}H${font}${goto 37}${voffset -11} Home: ${fs_used_perc /home}%${alignr}${fs_size /home}
+${goto 37} Free: ${fs_free /home}${alignr}${fs_bar 8,60 /home}
+${goto 15}${voffset 10}${font StyleBats:size=16}x${font}${voffset -4}${goto 40}I/O: ${diskio}${alignr}${diskiograph 8,60 444444 D6D6D6}
+
+${font Droid Sans:bold:size=9}TEMPS ${hr 3}
+${goto 15}${voffset 10}${font Devil inside:size=16}1${font}${voffset -11}${goto 40}CPU Temp: ${alignr}${hwmon 1 temp 1}°C
+${goto 37} CPU Fan: ${alignr}${hwmon 0 fan 2} RPM
+${goto 14}${voffset 10}${font Devil inside:size=16}x${font}${voffset -11}${goto 40}Case Temp: ${alignr}${hwmon 0 temp 1}°C
+${goto 37} Case Fans: ${alignr}${hwmon 0 fan 1} / ${hwmon 0 fan 3} RPM
+${goto 14}${voffset 10}${font Poky:size=15}y${font}${voffset -15}${goto 40}SSD Temp: ${alignr}${hddtemp /dev/sda}°C
+${goto 40}HDD Temp: ${alignr}${hddtemp /dev/sdb}°C
+${goto 40}GPU Temp: ${alignr}${execi 3 nvidia-settings -q gpucoretemp | grep '.0):' | awk '{print $4}' | cut -c -2}°C
+
+${font Droid Sans:bold:size=9}NETWORK ${hr 3}
+${goto 15}${voffset 6}${font VariShapes Solid:size=14}q${font}${goto 40}${voffset -10}Up: ${upspeed eth0}${font} ${alignr}${upspeedgraph eth0 8,60 444444 D6D6D6}
+${goto 40}Total: ${totalup eth0}
+${goto 15}${voffset 6}${font VariShapes Solid:size=14}Q${font}${goto 40}${voffset -10}Down: ${downspeed eth0}${font} ${alignr}${downspeedgraph eth0 8,60 444444 D6D6D6}
+${goto 40}Total: ${totaldown eth0}
+${goto 15}${voffset 8}${font Poky:size=13}w${font}${goto 40}${voffset -10}Local IP: ${alignr}${addr eth0}
+${goto 40}Public IP:
+${voffset 80}
+
